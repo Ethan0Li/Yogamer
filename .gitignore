@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Conda/Virtual environments
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
+yoga_pose.csv
+
+# Model files
+yoga_pose_classifier.keras
+model_config.json
