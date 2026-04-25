@@ -11,7 +11,3 @@ __pycache__/
 
 # Data
 yoga_pose.csv
-
-# Model files
-yoga_pose_classifier.keras
-model_config.json
