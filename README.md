@@ -12,20 +12,20 @@ The workflow is as follows: I plan to use MediaPipe to identify body positioning
 
 ## Setup
 # Capture environment
-conda env create -f environment_capture.yml
-conda activate yogamer_capture
+-conda env create -f environment_capture.yml
+-conda activate yogamer_capture
 
 # Train environment  
-conda env create -f environment_train.yml
-conda activate yogamer_train
+-conda env create -f environment_train.yml
+-conda activate yogamer_train
 
 ## Project Structure
-data_capture.py        # collect training data
-yoga_pose.csv          # landmark dataset
-train_model.ipynb      # training notebook
-yoga_pose_classifier.keras  # saved model
-model_config.json      # class labels and threshold
-yogamer.py             # real-time application (coming soon)
+-data_capture.py        # collect training data
+-yoga_pose.csv          # landmark dataset
+-train_model.ipynb      # training notebook
+-yoga_pose_classifier.keras  # saved model
+-model_config.json      # class labels and threshold
+-yogamer.py             # real-time application (coming soon)
 
 ## Poses
 Current classes: Child's Pose, Cobra Pose, Seated Forward Fold
