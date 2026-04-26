@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yogamer | Home</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body class="theme-earth">
+  <main class="container wide">
+    <nav class="top-nav">
+      <a class="brand" href="/">Yogamer</a>
+      <div class="nav-links">
+        <a class="nav-link active" href="/">Home</a>
+        <a class="nav-link" href="/catalog">Pose Catalog</a>
+      </div>
+    </nav>
+
+    <header class="hero airy">
+      <p class="eyebrow">mind + body session</p>
+      <h1>Flow into your next session</h1>
+      <p class="hero-copy">Start your live pose detection session and track real yoga time in a calm, focused space.</p>
+      <button id="startSessionBtn" class="start-button">Start Session</button>
+      <p id="sessionStatus" class="status-text">Session idle</p>
+    </header>
+
+    <section class="quote-grid">
+      <article class="quote-card">
+        <p>breathe in calm, breathe out tension</p>
+      </article>
+      <article class="quote-card">
+        <p>rise with intention</p>
+      </article>
+      <article class="quote-card">
+        <p>small practice, big progress</p>
+      </article>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='home.js') }}"></script>
+</body>
+</html>

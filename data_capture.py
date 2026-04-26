@@ -3,7 +3,7 @@ import mediapipe as mp
 import csv
 import os
 import time
-import math
+import numpy as np
 
 # preprocessing function
 def preProcess_rgb(frame):
@@ -24,10 +24,9 @@ def normalize_landmarks(landmarks):
     shoulder_mid_x = (landmarks[11].x + landmarks[12].x) / 2
     shoulder_mid_y = (landmarks[11].y + landmarks[12].y) / 2
 
-    torso_size = math.sqrt((shoulder_mid_x - hip_mid_x) ** 2 + (shoulder_mid_y - hip_mid_y) ** 2)
-    if torso_size < 1e-6:
-        torso_size = 1e-6
+    torso_size = np.sqrt((shoulder_mid_x - hip_mid_x) ** 2 + (shoulder_mid_y - hip_mid_y) ** 2)
 
+    # Cursor generated code for adding the normalized landmarks to the list
     normalized = []
     for lm in landmarks:
         normalized.extend(
@@ -46,7 +45,7 @@ mp_pose = mp.solutions.pose
 mp_draw = mp.solutions.drawing_utils
 
 # Define the label for the current pose
-LABEL = "Child's Pose"
+LABEL = "Low Lunge"
 # where the data goes
 CSV_FILE = "yoga_pose.csv"
 
@@ -62,7 +61,9 @@ if not os.path.exists(CSV_FILE):
 # Initialize Camera (default webcam) and recording parameters
 cap = cv2.VideoCapture(0)
 recording_time = 15 
+prep_time = 5
 capture_state = False
+prep_state = False
 
 # Process frames -> detect pose -> draw Landmarks
 with mp_pose.Pose(
@@ -91,6 +92,12 @@ with mp_pose.Pose(
             )
             landmarks = results.pose_landmarks.landmark
             
+            # Print left and right hip coordinates
+            # left_hip = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
+            # right_hip = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
+            # print(f"Left Hip: x={left_hip.x}, y={left_hip.y}, z={left_hip.z}")
+            # print(f"Right Hip: x={right_hip.x}, y={right_hip.y}, z={right_hip.z}")
+            
             # if true, capture data and save to csv
             if capture_state:
                 row = [LABEL]
@@ -106,11 +113,18 @@ with mp_pose.Pose(
             else:
                 capture_state = False
                 print(f"Done capture for {LABEL}")
-            # Print left and right hip coordinates
-            # left_hip = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
-            # right_hip = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
-            # print(f"Left Hip: x={left_hip.x}, y={left_hip.y}, z={left_hip.z}")
-            # print(f"Right Hip: x={right_hip.x}, y={right_hip.y}, z={right_hip.z}")
+                
+        # Cursor generated code for waiting for use to get into position, then start recording
+        elif prep_state:
+            prep_remaining = prep_time - (time.time() - prep_start_time)
+            if prep_remaining > 0:
+                cv2.putText(frame, f'Get ready... {int(prep_remaining)}s', (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+            else:
+                prep_state = False
+                capture_state = True
+                start_time = time.time()
+                print("Recording started...")
+            
         else:    
             cv2.putText(frame, f'Get into Pose: {LABEL}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             
@@ -119,10 +133,10 @@ with mp_pose.Pose(
         key = cv2.waitKey(5) & 0xFF
         
         # Start capturing data when 's' is pressed, stop after recording_time seconds, 'q' to quit
-        if  key == ord('s') and not capture_state:
-            capture_state = True
-            start_time = time.time()
-            print("Recording started...")
+        if  key == ord('s') and not capture_state and not prep_state:
+            prep_state = True
+            prep_start_time = time.time()
+            print(f"Get into position... recording starts in {prep_time} seconds.")
         elif key == ord('q'):
             break
         

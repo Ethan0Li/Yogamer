@@ -1,0 +1,245 @@
+/* AI-GENERATED COMMENT:
+   This stylesheet was generated with AI assistance for a cleaner Yogamer UI. */
+* {
+  box-sizing: border-box;
+}
+
+.theme-earth {
+  margin: 0;
+  font-family: "Segoe UI", "Trebuchet MS", Verdana, sans-serif;
+  background: linear-gradient(135deg, #8a6348 0%, #7a5b45 28%, #92715a 100%);
+  color: #2b1f1a;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 3rem;
+}
+
+.wide {
+  max-width: 1120px;
+  padding-top: 2rem;
+}
+
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.brand {
+  text-decoration: none;
+  color: #f6e8de;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #f8eee8;
+  border: 1px solid rgba(255, 243, 234, 0.45);
+  border-radius: 999px;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.95rem;
+  transition: background 0.15s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: rgba(255, 238, 227, 0.25);
+}
+
+.hero {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  border-radius: 24px;
+  background: rgba(247, 233, 223, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 18px 34px rgba(50, 30, 18, 0.24);
+}
+
+.hero h1 {
+  margin: 0.4rem 0 0;
+  font-size: 2.8rem;
+  color: #3b2a22;
+}
+
+.hero-copy {
+  margin: 0.9rem auto 0;
+  max-width: 620px;
+  color: #684d3d;
+  line-height: 1.6;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  color: #9b7965;
+  font-weight: 600;
+}
+
+.airy {
+  min-height: 46vh;
+  display: grid;
+  place-content: center;
+  gap: 0.4rem;
+}
+
+.start-button {
+  margin: 1.5rem auto 0;
+  display: block;
+  width: min(380px, 90%);
+  padding: 1rem 1.2rem;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #d99b7a, #b87352);
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.start-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(141, 80, 48, 0.4);
+}
+
+.status-text {
+  margin-top: 1rem;
+  color: #5e4639;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.quote-grid {
+  margin-top: 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.quote-card {
+  background: rgba(244, 228, 217, 0.85);
+  border-radius: 16px;
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 1rem;
+  color: #6a4e3f;
+  font-style: italic;
+  border: 1px solid rgba(255, 248, 243, 0.65);
+}
+
+.catalog-card {
+  margin-top: 2rem;
+  background: rgba(247, 233, 223, 0.9);
+  border-radius: 20px;
+  padding: 1.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 14px 35px rgba(50, 30, 18, 0.24);
+}
+
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.catalog-header h2 {
+  margin: 0;
+  color: #3b2a22;
+}
+
+.ghost-button {
+  border: 1px solid rgba(128, 87, 64, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.35);
+  color: #5b4336;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+.catalog-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.pose-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 249, 245, 0.75);
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(173, 133, 108, 0.2);
+}
+
+.pose-card {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+}
+
+.pose-image {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  display: block;
+}
+
+.pose-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 0.9rem;
+}
+
+.pose-name {
+  color: #4f382c;
+  font-weight: 600;
+}
+
+.pose-time {
+  color: #85563e;
+  font-weight: 700;
+}
+
+.section-header h1 {
+  margin: 0.4rem 0;
+  font-size: 2.2rem;
+  color: #f6e8de;
+}
+
+.section-header .hero-copy {
+  margin: 0;
+  color: #f3ddd1;
+}
+
+@media (max-width: 820px) {
+  .quote-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+}

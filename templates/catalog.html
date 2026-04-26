@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yogamer | Catalog</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body class="theme-earth">
+  <main class="container wide">
+    <nav class="top-nav">
+      <a class="brand" href="/">Yogamer</a>
+      <div class="nav-links">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link active" href="/catalog">Pose Catalog</a>
+      </div>
+    </nav>
+
+    <header class="section-header">
+      <p class="eyebrow">progress tracker</p>
+      <h1>Pose Catalog</h1>
+      <p class="hero-copy">Your accumulated pose time from all sessions.</p>
+    </header>
+
+    <section class="catalog-card airy">
+      <div class="catalog-header">
+        <h2>Total Time by Pose</h2>
+        <button id="resetBtn" class="ghost-button">Reset Totals</button>
+      </div>
+      <div id="catalogList" class="catalog-list"></div>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='catalog.js') }}"></script>
+</body>
+</html>
