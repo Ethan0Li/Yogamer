@@ -3,6 +3,7 @@ import mediapipe as mp
 import csv
 import os
 import time
+import math
 
 # preprocessing function
 def preProcess_rgb(frame):
@@ -14,6 +15,30 @@ def preProcess_rgb(frame):
     frame = cv2.flip(frame, 1)
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     return frame, rgb
+
+def normalize_landmarks(landmarks):
+    hip_mid_x = (landmarks[23].x + landmarks[24].x) / 2
+    hip_mid_y = (landmarks[23].y + landmarks[24].y) / 2
+    hip_mid_z = (landmarks[23].z + landmarks[24].z) / 2
+
+    shoulder_mid_x = (landmarks[11].x + landmarks[12].x) / 2
+    shoulder_mid_y = (landmarks[11].y + landmarks[12].y) / 2
+
+    torso_size = math.sqrt((shoulder_mid_x - hip_mid_x) ** 2 + (shoulder_mid_y - hip_mid_y) ** 2)
+    if torso_size < 1e-6:
+        torso_size = 1e-6
+
+    normalized = []
+    for lm in landmarks:
+        normalized.extend(
+            [
+                (lm.x - hip_mid_x) / torso_size,
+                (lm.y - hip_mid_y) / torso_size,
+                (lm.z - hip_mid_z) / torso_size,
+                lm.visibility,
+            ]
+        )
+    return normalized
     
  
 # Initialize tools (pose estimation and drawing utilities)
@@ -69,10 +94,10 @@ with mp_pose.Pose(
             # if true, capture data and save to csv
             if capture_state:
                 row = [LABEL]
-                for lm in landmarks:
-                    row += [lm.x, lm.y, lm.z, lm.visibility]
+                row += normalize_landmarks(landmarks)
                 with open(CSV_FILE, mode='a', newline='') as f:
                     csv.writer(f).writerow(row)
+
         # display recording status of capturing data and tracking countdown timer           
         if capture_state:
             time_remaining = recording_time - (time.time() - start_time)
