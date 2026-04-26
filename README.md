@@ -1,31 +1,92 @@
-# CS372 Final Project: Yogamer (In-Progress)
+# Yogamer
 
-## Project Overview
-The goal of this project is to deepen my understanding of ML while also addressing an issue. 
-Motivation: the focus of today is too much focused on attaining the perfect physique and building muscle. While they are worthwhile investments, the other aspects of physcail health may be left behind. To advocate for the improvement of flexibility and mobility, this application is meant to promote and yoga. this is important because blah blah blah
+Yogamer is a real-time yoga pose tracking app built with MediaPipe + a custom MLP classifier.
+It includes:
 
-The workflow is as follows: I plan to use MediaPipe to identify body positioning, and the body positioning is fed into a Multiclass-classifcation NN that classifies the poses into the corresponding Yoga pose all in real time. This information is displayed to you and the time is tracked for you which you can track in the home screen. 
+- a live pose session (`yogamer_app.py`) using webcam + TFLite inference
+- a Flask web app (`backend_app.py`) with:
+  - Home page with **Start Session**
+  - separate **Pose Catalog** page with total tracked time per pose
 
-## Environments
-- `yogamer_capture` — data collection (MediaPipe + OpenCV)
-- `yogamer_train` — model training (TensorFlow + scikit-learn)
+## Features
 
-## Setup
-# Capture environment
-- conda env create -f environment_capture.yml
-- conda activate yogamer_capture
+- Real-time pose classification from webcam landmarks
+- Pose hold gating (default: `4` seconds) before timing starts
+- Per-pose cumulative time tracking persisted to `pose_stats.json`
+- Web UI with separate Home and Catalog pages
+- Catalog cards with stock-style pose images
 
-# Train environment  
-- conda env create -f environment_train.yml
-- conda activate yogamer_train
+## Tech Stack
 
-## Project Structure
-- data_capture.py        # collect training data
-- yoga_pose.csv          # landmark dataset
-- train_model.ipynb      # training notebook
-- yoga_pose_classifier.keras  # saved model
-- model_config.json      # class labels and threshold
-- yogamer.py             # real-time application (coming soon)
+- Python
+- OpenCV
+- MediaPipe
+- TensorFlow / TFLite (`ai-edge-litert` runtime)
+- Flask
+- HTML/CSS/JavaScript
 
-## Poses
-Current classes: Child's Pose, Cobra Pose, Seated Forward Fold
+## Project Files
+
+- `backend_app.py` - Flask backend and API routes
+- `yogamer_app.py` - live webcam session + pose timing logic
+- `templates/` - HTML pages (`index.html`, `catalog.html`)
+- `static/` - frontend assets (`styles.css`, `home.js`, `catalog.js`)
+- `mlp.ipynb` - model training notebook
+- `model_config.json` - label map for inference
+- `yoga_pose_classifier.tflite` - deployed model
+- `yoga_pose_classifier.keras` - Keras model artifact
+- `data_capture.py` - dataset capture script
+- `yoga_pose.csv` - landmark dataset
+- `pose_stats.json` - persisted pose time totals
+
+## Environment Setup (Conda)
+
+This project currently uses Conda environments.
+
+### 1) Create and activate runtime environment
+
+```bash
+conda env create -f environment_cv.yml
+conda activate yogamer_cv
+```
+
+If your runtime env name differs, update the backend runtime selection:
+
+```bash
+set YOGAMER_CONDA_ENV=yogamer_cv
+```
+
+### 2) (Optional) Training environment
+
+Use your training env for `mlp.ipynb` and model export.
+
+## Run the Web App
+
+From the project root:
+
+```bash
+conda activate yogamer_cv
+python backend_app.py
+```
+
+Then open:
+
+- `http://127.0.0.1:5000/` (Home)
+- `http://127.0.0.1:5000/catalog` (Pose Catalog)
+
+Press **Start Session** on Home to launch the webcam session window.
+
+## Runtime Config
+
+- `POSE_HOLD_SECONDS` (default `4.0`): seconds pose must be stable before timing begins
+- `YOGAMER_CONDA_ENV` (default `yogamer_cv`): conda env used to launch `yogamer_app.py`
+- `YOGAMER_RUNTIME_PYTHON` (optional): explicit Python path for runtime process
+
+## Current Pose Classes
+
+- Butterfly Pose
+- Child's Pose
+- Cobra Pose
+- Downward Dog Pose
+- Ground Quad Stretch
+- Seated Forward Fold
