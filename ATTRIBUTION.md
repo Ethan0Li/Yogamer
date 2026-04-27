@@ -26,8 +26,8 @@
 
 ## AI Assistance
 
-This project was developed with significant assistance from **Claude (Anthropic)** via claude.ai and Cursor
-Within each file, if the comment was AI-Generated, that module was AI generated. else, I was written by me. 
+This project was developed with significant assistance from **Claude (Anthropic)** via claude.ai and Cursor.
+Within each file, if the comment was AI-Generated, that module was AI generated. else, it was written by me. 
 
 ### What AI Was Used For
 
@@ -37,18 +37,18 @@ Claude assisted with the following throughout development:
 - **Code guidance** — refering me to proper documentation
 - **Architecture decisions** — discussing model architecture choices, hyperparameter selection, and environment isolation strategy
 - **Debugging** — diagnosing issues such as dependency conflicts (protobuf/TFLite), mislabeled CSV data, and model not learning
-- **Data pipeline design** — normalization approach (hip-centered, torso-scaled), CSV structure, and the state machine pattern for data capture
-- **Documentation** — The format and most of documentation in the .md files were AI generated with Claude. 
+- **Data pipeline design** — normalization approach (while I came up with hip-center, claude introduced size normalization), CSV structure, and the state machine pattern for data capture
+- **Documentation** — The format and most of documentation in the .md files were AI generated with Claude. I also used it to double check grammar, etc. 
 
 Cusor assisted with the following:
 
-- **Front-end** — The entire Front-end was developed through Cursor, I only provided the template and general style of website (2 tabs with home and pose catalog)
+- **Front-end** — The entire Front-end was developed through Cursor, I only provided the template and general style of website (2 tabs with home and pose catalog and Feel template as well as the images)
 
 - **Back-end** — backend_app.py was entirely AI-generated. I only provided the general flow (if pose for 4 seconds, start active_timer to add to total pose catalog)
 
 ### What Was Written Independently
 
-- Near all final code was written and typed by Ethan Liao
+- Near all final ML code was written and typed by Ethan Liao
 - Data collection was performed independently
 - Design decisions (pose selection, confidence threshold, project structure) were made independently
 - All understanding of concepts was developed through the guided learning approach

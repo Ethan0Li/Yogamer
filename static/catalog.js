@@ -6,14 +6,12 @@ const catalogList = document.getElementById("catalogList");
 // AI-GENERATED COMMENT:
 // Curated stock-photo mapping by pose so each catalog item has a visual.
 const poseImageMap = {
-  "Butterfly Pose": "https://images.pexels.com/photos/6311625/pexels-photo-6311625.jpeg?auto=compress&cs=tinysrgb&w=900",
-  "Child's Pose": "https://images.pexels.com/photos/3822525/pexels-photo-3822525.jpeg?auto=compress&cs=tinysrgb&w=900",
-  "Cobra Pose": "https://images.pexels.com/photos/4793308/pexels-photo-4793308.jpeg?auto=compress&cs=tinysrgb&w=900",
-  "Downward Dog Pose": "https://images.pexels.com/photos/3822688/pexels-photo-3822688.jpeg?auto=compress&cs=tinysrgb&w=900",
-  "Ground Quad Stretch": "https://images.pexels.com/photos/6453974/pexels-photo-6453974.jpeg?auto=compress&cs=tinysrgb&w=900",
-  "Seated Forward Fold": "https://images.pexels.com/photos/7900279/pexels-photo-7900279.jpeg?auto=compress&cs=tinysrgb&w=900",
-  "Bridge Pose": "https://images.pexels.com/photos/6453481/pexels-photo-6453481.jpeg?auto=compress&cs=tinysrgb&w=900",
-  "Plank": "https://images.pexels.com/photos/2294354/pexels-photo-2294354.jpeg?auto=compress&cs=tinysrgb&w=900",
+  "Butterfly Pose": "/stock-image/Butterfy_pose.jpeg",
+  "Child's Pose": "/stock-image/Childs_pose.jpeg",
+  "Cobra Pose": "/stock-image/Cobra_pose.jpeg",
+  "Downward Dog Pose": "/stock-image/Downward_Dog_pose.jpeg",
+  "Ground Quad Stretch": "/stock-image/Ground_Quad_stretch.jpeg",
+  "Seated Forward Fold": "/stock-image/Seated_Forward_Fold.jpeg",
 };
 
 function formatSeconds(value) {
@@ -39,7 +37,7 @@ async function refreshCatalog() {
   data.poses.forEach((item) => {
     const row = document.createElement("div");
     row.className = "pose-row pose-card";
-    const imageUrl = poseImageMap[item.pose] || "https://images.pexels.com/photos/3822906/pexels-photo-3822906.jpeg?auto=compress&cs=tinysrgb&w=900";
+    const imageUrl = poseImageMap[item.pose] || "/stock-image/Butterfy_pose.jpeg";
     row.innerHTML = `
       <img class="pose-image" src="${imageUrl}" alt="${item.pose}" loading="lazy" />
       <div class="pose-meta">

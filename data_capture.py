@@ -16,6 +16,7 @@ def preProcess_rgb(frame):
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     return frame, rgb
 
+# make data robust to different body sizes and camera distances
 def normalize_landmarks(landmarks):
     hip_mid_x = (landmarks[23].x + landmarks[24].x) / 2
     hip_mid_y = (landmarks[23].y + landmarks[24].y) / 2
@@ -31,6 +32,7 @@ def normalize_landmarks(landmarks):
     for lm in landmarks:
         normalized.extend(
             [
+                # subtracting hip normalizes position, dividing by torso normalizes user size
                 (lm.x - hip_mid_x) / torso_size,
                 (lm.y - hip_mid_y) / torso_size,
                 (lm.z - hip_mid_z) / torso_size,

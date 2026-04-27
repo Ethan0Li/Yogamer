@@ -11,3 +11,7 @@ __pycache__/
 
 # Data
 yoga_pose.csv
+
+# Runtime/local app state
+pose_stats.json
+session_runtime.log

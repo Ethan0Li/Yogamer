@@ -100,7 +100,7 @@ python yogamer_app.py
 ```
 
 - Stand in front of your webcam at 2–4 meters distance
-- Angle yourself such that the webcam captures your sideview (direction shouldn't matter)
+- Angle yourself such that the webcam captures your sideview (direction should not matter)
 - Make sure to place the webcam to capture all parts of your body
 - Perform any of the supported poses
 - Press `q` to quit
@@ -147,4 +147,4 @@ cap = cv2.VideoCapture(1)  # try 1 instead of 0
 
 **Module not found errors:**
 - Make sure the correct conda environment is activated
-- Run `conda activate yogamer_capture` before running `.py` files
+- Run `conda activate yogamer_cv` before running `.py` files

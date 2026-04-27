@@ -5,7 +5,7 @@ import sys
 import time
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, send_from_directory
 
 
 # AI-GENERATED COMMENT:
@@ -14,6 +14,7 @@ from flask import Flask, jsonify, render_template
 BASE_DIR = Path(__file__).resolve().parent
 STATS_FILE = BASE_DIR / "pose_stats.json"
 SESSION_LOG_FILE = BASE_DIR / "session_runtime.log"
+STOCK_IMAGE_DIR = BASE_DIR / "stock_image"
 POSE_HOLD_SECONDS = float(os.getenv("POSE_HOLD_SECONDS", "4.0"))
 DEFAULT_CONDA_ENV = os.getenv("YOGAMER_CONDA_ENV", "yogamer_cv")
 
@@ -87,6 +88,11 @@ def index():
 @app.route("/catalog")
 def catalog_page():
     return render_template("catalog.html")
+
+
+@app.route("/stock-image/<path:filename>")
+def serve_stock_image(filename):
+    return send_from_directory(STOCK_IMAGE_DIR, filename)
 
 
 @app.route("/api/session/start", methods=["POST"])
