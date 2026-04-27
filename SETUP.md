@@ -69,7 +69,7 @@ python data_capture.py
 ```
 
 - Get into the pose
-- Press `s` to record 5 seconds of landmark data
+- Press `s` to record 15 seconds of landmark data
 - Press `q` when done
 - Repeat for each pose, changing `LABEL` each time
 
@@ -92,11 +92,11 @@ The notebook will:
 
 ---
 
-## Step 6 — Run the Real-Time App
+## Step 6 — Run the Real-Time Classifier
 
 ```bash
 conda activate yogamer_cv
-python yogamer.py
+python yogamer_app.py
 ```
 
 - Stand in front of your webcam at 2–4 meters distance
@@ -107,15 +107,28 @@ python yogamer.py
 
 ---
 
-## Supported Poses
+## Step 7 — Run the Application
 
-- Child's Pose
-- Cobra Pose
-- Butterfly Pose
-- Downward Dog Pose
-- Seated Forward Fold
-- Ground Quad Stretch
-- (More could be added)
+```bash
+conda activate yogamer_cv
+python backend_app.py
+```
+
+### Home
+
+The start session button launches the pose classification session via `yogamer_app.py`. Note that you may need to click more than once and wait, as the application has high latency (work in progress).
+
+- Stand in front of your webcam at 2–4 meters distance
+- Angle yourself such that the webcam captures your side view (direction does not matter)
+- Make sure the webcam captures all parts of your body
+- Perform any of the supported poses
+- Press `q` to quit
+
+---
+
+### Catalog
+
+A simple catalog that records the total time spent in each pose across all yoga sessions.
 
 ---
 
