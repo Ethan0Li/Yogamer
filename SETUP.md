@@ -18,23 +18,23 @@ cd Yogamer
 
 ---
 
-## Step 2 — Create the Capture Environment
+## Step 2 — Create the CV Environment
 
 This environment is used for data collection and real-time classification.
 
 ```bash
-conda env create -f environment_capture.yml
-conda activate yogamer_capture
+conda env create -f environment_cv.yml
+conda activate yogamer_cv
 ```
 
 Verify the installation:
 ```bash
-python -c "import cv2; import mediapipe as mp; print('Capture environment ready')"
+python -c "import cv2; import mediapipe as mp; print('CV environment ready')"
 ```
 
 ---
 
-## Step 3 — Create the Training Environment
+## Step 3 — Create the Training Environment (Optional)
 
 This environment is used for training the neural network.
 
@@ -55,7 +55,7 @@ python -c "import tensorflow as tf; import sklearn; print('Train environment rea
 If you want to collect your own training data rather than using the provided dataset:
 
 ```bash
-conda activate yogamer_capture
+conda activate yogamer_cv
 ```
 
 Edit `data_capture.py` and change the `LABEL` variable to the pose name:
@@ -95,12 +95,13 @@ The notebook will:
 ## Step 6 — Run the Real-Time App
 
 ```bash
-conda activate yogamer_capture
+conda activate yogamer_cv
 python yogamer.py
 ```
 
 - Stand in front of your webcam at 2–4 meters distance
 - Angle yourself such that the webcam captures your sideview (direction shouldn't matter)
+- Make sure to place the webcam to capture all parts of your body
 - Perform any of the supported poses
 - Press `q` to quit
 
