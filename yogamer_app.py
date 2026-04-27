@@ -10,7 +10,7 @@ from ai_edge_litert.interpreter import Interpreter
 
 
 RESTING_LABEL = "Resting"
-CONFIDENCE_THRESHOLD = 0.9
+CONFIDENCE_THRESHOLD = 0.95
 POSE_HOLD_SECONDS = float(os.getenv("POSE_HOLD_SECONDS", "4.0"))
 STATS_PATH = Path(os.getenv("POSE_STATS_FILE", "pose_stats.json"))
 
