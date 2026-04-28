@@ -47,11 +47,36 @@ python backend_app.py
 
 ## Evaluation
 
+### Choosing Optimizer
+
+Looking at the nature of this problem, the best optimizers for this between SGD and Adam. 
+I provide a sample of the training as reference.
+
+The model parameters used were 3-layers, 256 → 128 → 64, dropout = 0.3. The learning rate was varied and the best result was chosen. 
+
+- **SGD** - Momentum was set to 0.9 to allow it to converge faster
+    Epoch 12/100
+    73/73 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 0.9738 - loss: 0.1110 - val_accuracy: 0.9961 - val_loss: 0.0202
+    Epoch 13/100
+    ...
+    Epoch 100/100
+    73/73 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 0.9987 - loss: 0.0062 - val_accuracy: 1.0000 - val_loss: 6.7399e-05
+
+- **Adam** - 
+    Epoch 12/100
+    73/73 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 1.0000 - loss: 9.1441e-04 - val_accuracy: 1.0000 - val_loss: 7.2806e-05
+    Epoch 13/100
+    ...
+    Epoch 64/100
+    73/73 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 1.0000 - loss: 5.0897e-05 - val_accuracy: 1.0000 - val_loss: 4.1424e-09
+
+In use in yogamer_app.py, SGD was better for admitting low confidence in noise, meaning that resting state was accurately identified. However, some of the poses were inaccurately identified (Butterfly became seated forward fold). The larger issue is that when I held a pose, it seemed to constantly shifting between it and another state, breaking the time. Changing the threshold made it where the resting state started becoming classified as a pose. While Adam had some issue in classifying resting state as a pose, it was near completely accurate in classifying poses. As such Adam was choosen.  
+
 ### Hyperparameter Tuning
 
 There are many hyperparameters that could be adjusted, so I only tuned the ones I felt were most significant.
 
-- **Epochs, batch size, & patience** — batch size of 32 was used as it is standard and outperformed other options in testing. Epochs and patience work in tandem — patience ensures the model stops early before overfitting, so most runs do not reach the full 100 epochs.
+- **Epochs, batch size, & patience** — batch size of 32 was used. It is standard and outperformed other options in testing through class. Epochs and patience work in tandem — patience ensures the model stops early before overfitting, so most training runs do not reach the full 100 epochs.
 - **Train/validation/test split** — I utilized the standard from class: 70/30 train/test split with 10% of training held out for validation, producing a 63/7/30 train/validation/test split.
 - **Architecture depth** — I utilize the standard 3-layer depth since the number of inputs does not increase (132).
 

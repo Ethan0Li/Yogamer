@@ -5,14 +5,22 @@ import os
 import time
 import numpy as np
 
-# preprocessing function
+# preprocessing function that qualitively improved pose estimation and tracking of limbs
 def preProcess_rgb(frame):
+    #slight research on optimal frame size for mediapipe 
     frame = cv2.resize(frame, (640, 480))
+    
+    # histogram equalization on the Y channel of YUV color space to improve contrast in varying lighting conditions
     yuv = cv2.cvtColor(frame, cv2.COLOR_BGR2YUV)
     yuv[:,:,0] = cv2.equalizeHist(yuv[:, :, 0])
     frame = cv2.cvtColor(yuv, cv2.COLOR_YUV2BGR)
+    
+    # increased contrast for better landmark detection
     frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=0)
+    
+    # Selfie mode (mirror image) for more intuitive interaction
     frame = cv2.flip(frame, 1)
+    
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     return frame, rgb
 
