@@ -149,10 +149,10 @@ def main():
     active_start_time = None
 
     with mp_pose.Pose(
-        model_complexity=2,
+        model_complexity=1,
         smooth_landmarks=True,
-        min_detection_confidence=0.5,
-        min_tracking_confidence=0.5,
+        min_detection_confidence=0.6,
+        min_tracking_confidence=0.6,
     ) as pose:
         # Process frames -> detect pose -> draw landmarks
         while cap.isOpened():

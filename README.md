@@ -2,13 +2,19 @@
 
 ## What it Does
 
-Yogamer is a real-time yoga pose classification system that uses a webcam to detect and identify yoga poses as you perform them. It combines MediaPipe's pose estimation model — which tracks 33 body landmarks in real time — with a custom-trained multilayer perceptron (MLP) neural network to classify poses such as Child's Pose, Cobra Pose, Butterfly Pose, Downward Dog, Seated Forward Fold, and Ground Quad Stretch. The system normalizes all landmark coordinates relative to the hip midpoint and torso size, making classification robust to different body sizes, camera distances, and positions. If the model's confidence falls below a threshold, the system displays a "Resting" state rather than forcing a classification. Once a pose is held consistently, the session logs an active timer of that pose. Once the user stops, the time doing the pose is added to the pose catalog from which the user can observe their progress. The session allows the capture of all registered poses, meaning that the user may switch between poses, and Yogamer would track all of it for the user (only complication is making sure the user stays in view).
+Yogamer is a real-time yoga pose classification system that uses a webcam to detect and identify yoga poses as you perform them. It combines MediaPipe's pose estimation model — which tracks 33 body landmarks in real time — with a custom-trained multilayer perceptron (MLP) neural network to classify poses such as Child's Pose, Cobra Pose, Butterfly Pose, Downward Dog, Seated Forward Fold, and Ground Quad Stretch. The system normalizes all landmark coordinates relative to the hip midpoint and torso size, making classification robust to different body sizes, camera distances, and positions. If the model's confidence falls below a threshold, the system displays a "Resting" state rather than forcing a classification. Once a pose is held consistently, the session logs an active timer of that pose. Once the user stops, the time doing the pose is added to the pose catalog from which the user can observe their progress. The session allows the capture of all registered poses, meaning that the user may switch between poses, and Yogamer would track all of it for the user.
 
 ---
 
-## Motivation
+### Motivation
 
-During a time of heightened fitness culture, push-up counters and gym tracking apps are everywhere. However, one important aspect of physical health is often overlooked — flexibility. Yoga improves joint mobility and range of motion, allowing people to move more freely and with less risk of injury. This way, the joints and ligaments are able to catch up to the bulging muscles you would want to build, and allow you to move the way you want. Built with extensibility in mind, new poses can be added simply by collecting additional training data and retraining the model. More functionalities that motivate yoga may be added later as well.
+During a time of heightened fitness culture, push-up counters and gym tracking apps are everywhere. However, one important aspect of physical health is often overlooked — flexibility. Flexibility has long been linked to outcomes like back pain relief, injury prevention, and better posture, yet it remains one of the least studied components of physical fitness, with no large-scale research programs specifically designed to understand its impact on health (Institute of Medicine, 2012). Yoga addresses this gap directly, improving joint mobility and range of motion so that joints and ligaments can keep pace with the muscles being built — letting you move the way you actually want to.
+
+The science backs this up: flexibility training through practices like yoga and stretching can increase range of motion after just a single session, with even greater gains accumulating over weeks of regular practice. What's more, stretching one area of the body has been shown to improve flexibility in non-adjacent joints too, making yoga an efficient tool for whole-body mobility (Konrad et al., 2024). Built with extensibility in mind, new poses can be added simply by collecting additional training data and retraining the model. More functionalities that motivate yoga may be added later as well.
+
+References:
+- Institute of Medicine. (2012). Fitness measures and health outcomes in youth. National Academies Press. https://www.ncbi.nlm.nih.gov/books/NBK241323/
+- Konrad et al. (2024). The effects of chronic stretch training on musculoskeletal pain. NCBI. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12354564/
 
 ---
 
@@ -55,18 +61,24 @@ I provide a sample of the training as reference.
 The model parameters used were 3-layers, 256 → 128 → 64, dropout = 0.3. The learning rate was varied and the best result was chosen. 
 
 - **SGD** - Momentum was set to 0.9 to allow it to converge faster
+    
     Epoch 12/100
     73/73 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 0.9738 - loss: 0.1110 - val_accuracy: 0.9961 - val_loss: 0.0202
+    
     Epoch 13/100
     ...
+    
     Epoch 100/100
     73/73 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 0.9987 - loss: 0.0062 - val_accuracy: 1.0000 - val_loss: 6.7399e-05
 
 - **Adam** - 
+    
     Epoch 12/100
     73/73 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 1.0000 - loss: 9.1441e-04 - val_accuracy: 1.0000 - val_loss: 7.2806e-05
+    
     Epoch 13/100
     ...
+    
     Epoch 64/100
     73/73 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 1.0000 - loss: 5.0897e-05 - val_accuracy: 1.0000 - val_loss: 4.1424e-09
 
@@ -119,13 +131,13 @@ More hyperparameter tuning could be done as I add more data and poses to the mod
 
 This presents an issue where the model is well-trained to the different poses, but when encountering "noise", it is inclined to try and fit that noise to a pose — and if the model is overfitted, it would likely classify some noise with 100% certainty.
 
-This presents an interesting finding where it would be more preferable that the model is slightly less accurate (instead of 100% for training, validation, and testing, perhaps around 99%), so that the classifications are correct but the confidence levels are not at 100%.
+This presents an interesting finding where it would be more preferable that the model is slightly less accurate, so that the classifications are correct but the confidence levels are not at 100%.
 
 I do not foresee this as a major issue. Prior to this finding, the poses I picked were meant to be quite distinct from one another. As more data and poses are added to the model, the accuracy would naturally drop, and the hyperparameters could be tuned further.
 
 ---
 
-## Individual Contributions
+## Contributions
 
 This is a solo project developed entirely by Ethan Liao. All components — data collection pipeline, preprocessing, model architecture, training, and real-time application — were designed and implemented individually.
 

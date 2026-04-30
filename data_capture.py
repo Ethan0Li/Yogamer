@@ -55,7 +55,7 @@ mp_pose = mp.solutions.pose
 mp_draw = mp.solutions.drawing_utils
 
 # Define the label for the current pose
-LABEL = "Low Lunge"
+LABEL = "Low  "
 # where the data goes
 CSV_FILE = "yoga_pose.csv"
 
