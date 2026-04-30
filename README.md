@@ -46,8 +46,8 @@ python backend_app.py
 
 ## Video Links
 
-- 🎥 Demo Video: _coming soon_
-- 🔧 Technical Walkthrough: _coming soon_
+- 🎥 Demo Video: (https://duke.zoom.us/rec/share/Vq3mgqXnIQfdldTSC4Ebe0osAwrfKAOPzTwDxZU1BWjjnatgQ7A39heudA8MvbX8.OJ--RYnRZ9c4794b?startTime=1777520280000)
+- 🔧 Technical Walkthrough: (https://duke.zoom.us/rec/share/Vq3mgqXnIQfdldTSC4Ebe0osAwrfKAOPzTwDxZU1BWjjnatgQ7A39heudA8MvbX8.OJ--RYnRZ9c4794b?startTime=1777521115000)
 
 ---
 
