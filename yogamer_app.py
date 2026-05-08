@@ -7,7 +7,10 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from ai_edge_litert.interpreter import Interpreter
+import threading, queue
 
+frame_queue = queue.Queue(maxsize=1)
+result_queue = queue.Queue(maxsize=1)
 
 RESTING_LABEL = "Resting"
 CONFIDENCE_THRESHOLD = 0.95
@@ -15,16 +18,19 @@ POSE_HOLD_SECONDS = float(os.getenv("POSE_HOLD_SECONDS", "4.0"))
 STATS_PATH = Path(os.getenv("POSE_STATS_FILE", "pose_stats.json"))
 
 
-# Proccesses the frame for better pose estimation
 def preprocess_rgb(frame):
-    frame = cv2.resize(frame, (640, 480))
-    yuv = cv2.cvtColor(frame, cv2.COLOR_BGR2YUV)
+    frame = cv2.flip(frame, 1)# flip display frame
+    small = cv2.resize(frame, (256, 256))
+    frame = cv2.resize(frame, (960, 720))# upscale for better display
+    
+    # enhancement only if actually needed
+    yuv = cv2.cvtColor(small, cv2.COLOR_BGR2YUV)
     yuv[:, :, 0] = cv2.equalizeHist(yuv[:, :, 0])
-    frame = cv2.cvtColor(yuv, cv2.COLOR_YUV2BGR)
-    frame = cv2.convertScaleAbs(frame, alpha=1.35, beta=0)
-    frame = cv2.flip(frame, 1)
-    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    return frame, rgb
+    small = cv2.cvtColor(yuv, cv2.COLOR_YUV2BGR)
+    small = cv2.convertScaleAbs(small, alpha=1.35, beta=0)
+    
+    rgb = cv2.cvtColor(small, cv2.COLOR_BGR2RGB)
+    return frame, rgb                                 # original for display, small for inference
 
 # Normalizes landmarks
 def normalize_landmarks(landmarks):
@@ -119,8 +125,7 @@ def flush_active_pose(active_pose, active_start_time, pose_stats):
     pose_stats[active_pose] = pose_stats.get(active_pose, 0.0) + elapsed
     save_pose_stats(pose_stats)
 
-# Main session loop with pose estimation, timing, and stats tracking
-def main():
+def inference_worker(classes, pose_stats):
     # Initialize tools (pose estimation and drawing utilities)
     mp_pose = mp.solutions.pose
     mp_draw = mp.solutions.drawing_utils
@@ -130,41 +135,28 @@ def main():
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
-
-    # load label map
-    with open("model_config.json", "r", encoding="utf-8") as file:
-        config = json.load(file)
-    classes = config["label_encoder"]
-    pose_stats = load_pose_stats(classes)
-    save_pose_stats(pose_stats)
-
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        # AI-GENERATED COMMENT:
-        # Fail loudly so backend/UI can report why the session exited immediately.
-        raise RuntimeError("Camera open failed. Ensure webcam is connected and not in use by another app.")
+    
     candidate_pose = None
     candidate_start_time = None
     active_pose = None
     active_start_time = None
-
+    
     with mp_pose.Pose(
         model_complexity=1,
         smooth_landmarks=True,
-        min_detection_confidence=0.6,
-        min_tracking_confidence=0.6,
+        min_detection_confidence=0.65,
+        min_tracking_confidence=0.65,
+        enable_segmentation=True,
     ) as pose:
-        # Process frames -> detect pose -> draw landmarks
-        while cap.isOpened():
-            success_ret, frame = cap.read()
-            if not success_ret:
+        while True:
+            frame, rgb = frame_queue.get()
+            if frame is None or rgb is None:
                 break
-
-            frame, rgb = preprocess_rgb(frame)
-            # Input into pose estimation model
             results = pose.process(rgb)
             predicted_label = RESTING_LABEL
             max_conf = 0.0
+            hold_progress = 0.0
+            active_duration = 0.0
 
             if results.pose_landmarks:
                 # Draw landmarks
@@ -183,35 +175,76 @@ def main():
                 max_conf = float(np.max(output_data))
                 if max_conf > CONFIDENCE_THRESHOLD:
                     predicted_label = classes[int(np.argmax(output_data))]
+                    
+                now = time.time()
+                pose_changed = predicted_label != candidate_pose
+                if pose_changed:
+                    candidate_pose = predicted_label
+                    candidate_start_time = now
 
-            #AI Generated
-            #for better UX, require pose to be held for a short duration before counting as active pose
-            now = time.time()
-            pose_changed = predicted_label != candidate_pose
-            if pose_changed:
-                candidate_pose = predicted_label
-                candidate_start_time = now
+                hold_elapsed = 0.0 if candidate_start_time is None else now - candidate_start_time
+                hold_progress = hold_elapsed / POSE_HOLD_SECONDS if POSE_HOLD_SECONDS > 0 else 1.0
 
-            hold_elapsed = 0.0 if candidate_start_time is None else now - candidate_start_time
-            hold_progress = hold_elapsed / POSE_HOLD_SECONDS if POSE_HOLD_SECONDS > 0 else 1.0
+                stable_pose = candidate_pose if (candidate_pose != RESTING_LABEL and hold_elapsed >= POSE_HOLD_SECONDS) else None
+                if stable_pose != active_pose:
+                    flush_active_pose(active_pose, active_start_time, pose_stats)
+                    active_pose = stable_pose
+                    active_start_time = now if active_pose else None
 
-            stable_pose = candidate_pose if (candidate_pose != RESTING_LABEL and hold_elapsed >= POSE_HOLD_SECONDS) else None
-            if stable_pose != active_pose:
-                flush_active_pose(active_pose, active_start_time, pose_stats)
-                active_pose = stable_pose
-                active_start_time = now if active_pose else None
-
-            active_duration = 0.0 if active_start_time is None else max(0.0, now - active_start_time)
+                active_duration = 0.0 if active_start_time is None else max(0.0, now - active_start_time)
             draw_overlay(frame, predicted_label, max_conf, active_pose, hold_progress, active_duration)
-            cv2.imshow("Yogamer Session (Press Q to quit)", frame)
-
-            if cv2.waitKey(5) & 0xFF == ord("q"):
-                break
-
+            try:
+                result_queue.put_nowait(frame)
+            except queue.Full:
+                pass
     flush_active_pose(active_pose, active_start_time, pose_stats)
+                        
+# Main session loop with pose estimation, timing, and stats tracking
+def main():
+    # load label map
+    with open("model_config.json", "r", encoding="utf-8") as file:
+        config = json.load(file)
+    classes = config["label_encoder"]
+    pose_stats = load_pose_stats(classes)
+    save_pose_stats(pose_stats)
+    
+    t = threading.Thread(target=inference_worker, args=(classes, pose_stats), daemon=True)
+    t.start()
+    
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("ERROR: Could not open webcam.")
+        return
+
+    while cap.isOpened():
+        success_ret, frame = cap.read()
+        if not success_ret:
+            break
+
+        frame, rgb = preprocess_rgb(frame)
+        
+        try:
+            frame_queue.put_nowait((frame, rgb))
+        except queue.Full:
+            pass
+        
+        try:
+            display_frame = result_queue.get_nowait()
+            cv2.imshow("Yogamer Session (Press Q to quit)", display_frame)
+        except queue.Empty:
+            display_frame = frame
+        
+        if cv2.waitKey(3) & 0xFF == ord("q"):
+            break
+        
+    try:
+        frame_queue.put((None, None), timeout=1.0)
+    except queue.Full:
+        pass 
     cap.release()
     cv2.destroyAllWindows()
 
-
 if __name__ == "__main__":
     main()
+    
+    

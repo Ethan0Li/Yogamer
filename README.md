@@ -1,4 +1,4 @@
-# Yogamer 🧘 Yoga Tracker
+# Yogamer: Yoga Tracker
 
 ## What it Does
 
