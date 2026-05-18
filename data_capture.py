@@ -7,21 +7,23 @@ import numpy as np
 
 # preprocessing function that qualitively improved pose estimation and tracking of limbs
 def preProcess_rgb(frame):
-    #slight research on optimal frame size for mediapipe 
-    frame = cv2.resize(frame, (640, 480))
-    
-    # histogram equalization on the Y channel of YUV color space to improve contrast in varying lighting conditions
-    yuv = cv2.cvtColor(frame, cv2.COLOR_BGR2YUV)
-    yuv[:,:,0] = cv2.equalizeHist(yuv[:, :, 0])
-    frame = cv2.cvtColor(yuv, cv2.COLOR_YUV2BGR)
-    
-    # increased contrast for better landmark detection
-    frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=0)
     
     # Selfie mode (mirror image) for more intuitive interaction
     frame = cv2.flip(frame, 1)
     
-    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    frame = cv2.resize(frame, (960, 720))# upscale for better display
+    #slight research on optimal frame size for mediapipe 
+    small = cv2.resize(frame, (640, 480))
+    
+    # histogram equalization on the Y channel of YUV color space to improve contrast in varying lighting conditions
+    yuv = cv2.cvtColor(small, cv2.COLOR_BGR2YUV)
+    yuv[:,:,0] = cv2.equalizeHist(yuv[:, :, 0])
+    small = cv2.cvtColor(yuv, cv2.COLOR_YUV2BGR)
+    
+    # increased contrast for better landmark detection
+    small = cv2.convertScaleAbs(small, alpha=1.5, beta=0)
+    
+    rgb = cv2.cvtColor(small, cv2.COLOR_BGR2RGB)
     return frame, rgb
 
 # make data robust to different body sizes and camera distances
@@ -55,7 +57,7 @@ mp_pose = mp.solutions.pose
 mp_draw = mp.solutions.drawing_utils
 
 # Define the label for the current pose
-LABEL = "Low  "
+LABEL = "Low Lunge"
 # where the data goes
 CSV_FILE = "yoga_pose.csv"
 
@@ -71,7 +73,7 @@ if not os.path.exists(CSV_FILE):
 # Initialize Camera (default webcam) and recording parameters
 cap = cv2.VideoCapture(0)
 recording_time = 15 
-prep_time = 5
+prep_time = 6
 capture_state = False
 prep_state = False
 
